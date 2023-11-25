@@ -132,3 +132,7 @@ dist
 
 # Inteli J Caches Index.
 .idea
+
+
+code/src/command/SmartController/SmartController.xcodeproj/
+code/.DS_Store
