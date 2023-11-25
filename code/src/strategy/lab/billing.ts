@@ -1,5 +1,6 @@
 import { FixedPackage } from "./fixedPackage";
 import { HourFlexPackage } from "./hourFlexPackage";
+import { PackageFactory } from "./packageFactory";
 import { SteppingPackage } from "./steppingPackage";
 
 export enum PackageType {
@@ -20,21 +21,9 @@ export class Billing {
     }
 
     public monthlyBill(): number {
-        let total = this.calculateMonthlyFee(this.totalHours, this.packageType);
+        let total = PackageFactory
+            .createPackage(this.packageType)
+            .monthlyBill(this.totalHours)
         return total + (total * this.vatRate) / 100;
-
-    }
-
-    private calculateMonthlyFee(total: number, packageType: PackageType): number {
-        switch (packageType) {
-            case PackageType.FIXED:
-                return new FixedPackage().monthlyBill(total);
-            case PackageType.HOUR_FLEX:
-                return new HourFlexPackage().monthlyBill(total);
-            case PackageType.STEPPING:
-                return new SteppingPackage().monthlyBill(total);
-            default:
-                return 0;
-        }
     }
 }
