@@ -1,31 +1,40 @@
 import { FixedPackage } from "./fixedPackage";
 import { HourFlexPackage } from "./hourFlexPackage";
+import { SteppingPackage } from "./steppingPackage";
 
 export enum PackageType {
-  FIXED = 'FIXED',
-  HOUR_FLEX = 'HOUR_FLEX',
-  STEPPING = 'STEPPING',
-  UNKNOWN = 'UNKNOWN',
+    FIXED = 'FIXED',
+    HOUR_FLEX = 'HOUR_FLEX',
+    STEPPING = 'STEPPING',
+    UNKNOWN = 'UNKNOWN',
 }
 
 export class Billing {
-  private vatRate = 7.0;
-  private totalHours: number;
-  private packageType: PackageType;
+    private vatRate = 7.0;
+    private totalHours: number;
+    private packageType: PackageType;
 
-  constructor(totalHours: number, packageType: PackageType) {
-    this.totalHours = totalHours;
-    this.packageType = packageType;
-  }
+    constructor(totalHours: number, packageType: PackageType) {
+        this.totalHours = totalHours;
+        this.packageType = packageType;
+    }
 
-  public monthlyBill(): number {
-    var total = 0.0;
-    if (this.packageType === PackageType.FIXED) {
-      total = new FixedPackage().monthlyBill(this.totalHours);
-    } else if (this.packageType === PackageType.HOUR_FLEX) {
-      total = new HourFlexPackage().monthlyBill(this.totalHours);
-    } else total = 0;
+    public monthlyBill(): number {
+        let total = this.calculateMonthlyFee(this.totalHours, this.packageType);
+        return total + (total * this.vatRate) / 100;
 
-    return total + (total * this.vatRate) / 100;
-  }
+    }
+
+    private calculateMonthlyFee(total: number, packageType: PackageType): number {
+        switch (packageType) {
+            case PackageType.FIXED:
+                return new FixedPackage().monthlyBill(total);
+            case PackageType.HOUR_FLEX:
+                return new HourFlexPackage().monthlyBill(total);
+            case PackageType.STEPPING:
+                return new SteppingPackage().monthlyBill(total);
+            default:
+                return 0;
+        }
+    }
 }
