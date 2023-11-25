@@ -1,3 +1,6 @@
+import { FixedPackage } from "./fixedPackage";
+import { HourFlexPackage } from "./hourFlexPackage";
+
 export enum PackageType {
   FIXED = 'FIXED',
   HOUR_FLEX = 'HOUR_FLEX',
@@ -8,9 +11,9 @@ export enum PackageType {
 export class Billing {
   private vatRate = 7.0;
   private totalHours: number;
-  private packageType: string;
+  private packageType: PackageType;
 
-  constructor(totalHours: number, packageType: string) {
+  constructor(totalHours: number, packageType: PackageType) {
     this.totalHours = totalHours;
     this.packageType = packageType;
   }
@@ -18,9 +21,9 @@ export class Billing {
   public monthlyBill(): number {
     var total = 0.0;
     if (this.packageType === PackageType.FIXED) {
-      total = 500;
+      total = new FixedPackage().monthlyBill(this.totalHours);
     } else if (this.packageType === PackageType.HOUR_FLEX) {
-      total = this.totalHours * 50;
+      total = new HourFlexPackage().monthlyBill(this.totalHours);
     } else total = 0;
 
     return total + (total * this.vatRate) / 100;
