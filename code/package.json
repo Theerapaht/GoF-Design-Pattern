@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --watchAll --coverage",
+    "test2": "jest",
     "dev": "nodemon",
     "build": "tsc --project ./"
   },
